@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import EventList from "../views/EventList.vue";
 import About from '../views/About.vue'
 import EventDetails from '@/views/EventDetails.vue'
+import SimpleForm from '@/views/SimpleForm.vue'
 
 const routes = [
   {
@@ -29,6 +30,11 @@ const routes = [
       name: "About",
       component: About,
   },
+  {
+    path: "/simpleform",
+    name: "SimpleForm",
+    component: SimpleForm,
+},
 ];
 
 const router = createRouter({
