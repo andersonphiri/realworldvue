@@ -6,7 +6,11 @@ import EventDetails from '@/views/event/Details.vue'
 import EventRegister from '@/views/event/Register.vue'
 import EventEdit from '@/views/event/Edit.vue'
 import SimpleForm from '@/views/SimpleForm.vue'
-
+import NotFound from '@/views/NotFound.vue'
+import NetworkError from '@/views/NetworkError.vue'
+import NProgress from 'nprogress'
+import EventService from '@/services/EventService.js'
+import GStore from "@/store";
 const routes = [
   {
     path: "/",
@@ -21,6 +25,25 @@ const routes = [
     name: "EventLayout",
     component: EventLayout,
      props: true,
+     beforeEnter : to => {
+     return EventService.touringVueRouterGetEvent(to.params.id)
+      .then(response =>  {
+       // this.event = response.data
+       GStore.event = response.data
+       console.log("respnse data was",response.data)
+  
+      }).catch (error => {
+          if (error.response && error.response.status == 404) {
+              return {
+                name: '404Resource',
+                params: {resource: 'event'}
+            }
+          } else {
+              return {name: 'NetworkError'};
+          }
+        
+      })
+     },
      children: [
       {
         path: "", // similar to "/event/:id"
@@ -103,6 +126,23 @@ const routes = [
     name: "SimpleForm",
     component: SimpleForm,
 },
+{
+  path: "/:catchAll(.*)",
+  name: 'NotFound',
+  component: NotFound,
+},
+{
+  path: "/404/:resource",
+  name: '404Resource',
+  component: NotFound,
+  props: true,
+},
+{
+  path: "/network-error",
+  name: 'NetworkError',
+  component: NetworkError,
+  props: true,
+},
 ];
 
 const router = createRouter({
@@ -110,4 +150,11 @@ const router = createRouter({
   routes,
 });
 
+router.beforeEach(() => {
+  NProgress.start()
+})
+
+router.afterEach(() => {
+  NProgress.done(true)
+})
 export default router;

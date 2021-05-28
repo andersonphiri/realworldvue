@@ -1,7 +1,8 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
-import store from "./store";
+import GStore from "@/store";
+import 'nprogress/nprogress.css'
 // import upperFirst from "lodash/upperCase"
 // import camelCase from "lodash/camelCase"
 
@@ -23,4 +24,8 @@ import store from "./store";
 // })
 //createApp(App).use(store).use(router)
 
-app.use(store).use(router).mount("#app");
+app
+//.use(store)
+.use(router)
+.provide('GStore', GStore)
+.mount("#app");
